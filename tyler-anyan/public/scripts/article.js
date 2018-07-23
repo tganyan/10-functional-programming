@@ -38,22 +38,25 @@ Article.fetchAll = callback => {
 };
 
 Article.numWordsAll = () => {
-  return Article.all.map((article) => article.body).reduce((accumulator, currentValue) => {
-    return currentValue.split(' ').length;
-  });
+  return Article.all.map(article => article.body.match(/\b\w+/g).length).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 };
 
 Article.allAuthors = () => {
-  return Article.all.map(article => article.author).reduce((accumulator, currentValue) => {
-    if(accumulator.indexOf(currentValue) === currentValue) {
-      return currentValue
-    }
-  });
+  return Article.all.map(article => article.author)
+  .reduce((authorNames, authorName) => { if (authorNames.indexOf(authorName) < 0) authorNames.push(authorName);
+  return authorNames;
+ }, [] )
 };
 
 Article.numWordsByAuthor = () => {
   return Article.allAuthors().map(author => {
-    
+    return {
+      name: author,
+      numWords: Article.all.filter(a => a.author === author)
+      .map(article => article.body.match(/\b\w+/g).length)
+      .reduce((accumulator, currentValue) => accumulator + currentValue)
+
+    }
   })
 };
 
