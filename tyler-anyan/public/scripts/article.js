@@ -24,10 +24,9 @@ Article.prototype.toHtml = function() {
 Article.loadAll = articleData => {
   articleData.sort((a,b) => (new Date(b.published_on)) - (new Date(a.published_on)))
 
-  /* OLD forEach():
-  articleData.forEach(articleObject => Article.all.push(new Article(articleObject)));
-  */
-
+  // OLD forEach():
+  // articleData.map(articleObject => Article.all.push(new Article(articleObject)));
+    Article.all = articleData.map(articleObject => new Article(articleObject));
 };
 
 Article.fetchAll = callback => {
@@ -39,20 +38,22 @@ Article.fetchAll = callback => {
 };
 
 Article.numWordsAll = () => {
-  return Article.all.map(word => word += word).reduce((allWords, word) => {
-    return allWords += word;
+  return Article.all.map((article) => article.body).reduce((accumulator, currentValue) => {
+    return currentValue.split(' ').length;
   });
 };
 
 Article.allAuthors = () => {
-  return Article.all.map(author => author += author).reduce((authors, author) => {
-    return authors += author;
+  return Article.all.map(article => article.author).reduce((accumulator, currentValue) => {
+    if(accumulator.indexOf(currentValue) === currentValue) {
+      return currentValue
+    }
   });
 };
 
 Article.numWordsByAuthor = () => {
   return Article.allAuthors().map(author => {
-
+    
   })
 };
 
